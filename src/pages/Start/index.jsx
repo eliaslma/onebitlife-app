@@ -1,14 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import DefaultButton from "../../Components/Common/DefaultButton";
 import LifeStatus from "../../Components/Common/LifeStatus";
 
 export default function Start() {
 
+  const navigation = useNavigation();
 
   const handleNavAppExplanation = () => {
-    console.log("Testando o clique");
+
+    
+      navigation.navigate("AppExplanation");
+    
+    
   };
 
   return (
@@ -19,6 +25,7 @@ export default function Start() {
             source={require("../../assets/icons/logo3.png")}
             style={styles.logo}
           />
+          <LifeStatus />
           <Text style={styles.description}>
             Vamos transformar sua vida {"\n"} em um jogo, buscando sempre {"\n"} o melhor nível.
           </Text>
