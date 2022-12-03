@@ -35,7 +35,7 @@ export default function Home() {
               checkColor="#90B7F3"
             />
           ) : (
-            <CreateHabit habitArea="Mente" borderColor="#90B7F3" />
+            <CreateHabit habitArea="Mente" borderColor="#90B7F3"/>
           )}
 
           {moneyHabit ? (
