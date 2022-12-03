@@ -34,7 +34,7 @@ export default function ExplanationCard() {
           style={styles.icon}
         />
         <Text style={styles.description}>
-          <Text style={styles.body}>Corpo:</Text> Hábitos para deixar te deixar
+          <Text style={styles.body}>Corpo:</Text> Hábitos para te deixar
           {"\n"}
           mais saudável e forte.
         </Text>

@@ -8,7 +8,7 @@ export default function AppExplanation() {
 
     const navigation = useNavigation();
 
-	const handleSetShowHome = () => {
+	const handleNavHome = () => {
         navigation.navigate("Home");
     };
 
@@ -29,7 +29,7 @@ export default function AppExplanation() {
           </Text>
           <DefaultButton
             buttonText={"Continuar"}
-            handlePress={handleSetShowHome}
+            handlePress={handleNavHome}
             width={250}
             height={50}
           />
