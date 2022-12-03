@@ -11,7 +11,7 @@ export default function StatusBar() {
           source={require("../../../assets/icons/educationIcon.png")}
           style={styles.icon}
         />
-        <ProgressBar progress={0.3} color={"#90B7F3"} style={styles.progress} />
+        <ProgressBar progress={1} color={"#90B7F3"} style={styles.progress} />
       </View>
       <View style={styles.statusBarContainer}>
         <Image
