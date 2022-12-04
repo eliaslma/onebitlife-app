@@ -10,6 +10,7 @@ import UpdateExcludeButtons from "../../Components/HabitPage/UpdateExcludeButton
 import DefaultButton from "../../Components/Common/DefaultButton";
 import HabitsService from "../../service/HabitsService";
 import * as Notifications from "expo-notifications";
+import NotificationService from "../../service/NotificationService";
 
 import {
   View,
@@ -75,6 +76,15 @@ export default function HabitPage({ route }) {
       );
     } else {
 
+      if (notificationToggle) {
+        NotificationService.createNotification(
+        habitInput,
+        frequencyInput,
+        dayNotification,
+        timeNotification
+        );
+      }
+
       HabitsService.createHabit({
         habitArea: habit?.habitArea,
         habitName: habitInput,
@@ -100,7 +110,7 @@ export default function HabitPage({ route }) {
   function handleUpdateHabit() {
     if (notificationToggle === true && !dayNotification && !timeNotification) {
       Alert.alert("Você precisa colocar a frequência e horário da notificação");
-		} else {
+    } else {
       HabitsService.updateHabit({
         habitArea: habit?.habitArea,
         habitName: habitInput,
@@ -112,8 +122,9 @@ export default function HabitPage({ route }) {
       }).then(() => {
         Alert.alert("Sucesso na atualização do hábito");
         if (!notificationToggle) {
-        
+          NotificationService.deleteNotification(habit?.habitName);
         } else {
+          NotificationService.deleteNotification(habit?.habitName);
           NotificationService.createNotification(
             habitInput,
             frequencyInput,

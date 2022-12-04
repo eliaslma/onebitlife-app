@@ -3,7 +3,7 @@ import { View, StyleSheet, Image } from "react-native";
 
 import { ProgressBar } from "react-native-paper";
 
-export default function StatusBar() {
+export default function StatusBar({}) {
   return (
     <View style={styles.container}>
       <View style={styles.statusBarContainer}>
