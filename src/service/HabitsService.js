@@ -106,6 +106,7 @@ const changeProgress = (obj) => {
     });
   });
 };
+
 export default {
   createHabit,
   findByArea,

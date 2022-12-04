@@ -1,17 +1,4 @@
-
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-
-import SelectHabit from "../../Components/HabitPage/SelectHabit";
-import SelectFrequency from "../../Components/HabitPage/SelectFrequency";
-import Notification from "../../Components/HabitPage/Notification";
-import TimeDatePicker from "../../Components/HabitPage/TimeDataPicker";
-import UpdateExcludeButtons from "../../Components/HabitPage/UpdateExcludeButtons";
-import DefaultButton from "../../Components/Common/DefaultButton";
-import HabitsService from "../../service/HabitsService";
-import * as Notifications from "expo-notifications";
-import NotificationService from "../../service/NotificationService";
-
 import {
   View,
   Text,
@@ -21,6 +8,17 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import * as Notifications from "expo-notifications";
+import NotificationService from "../../service/NotificationService";
+
+import SelectHabit from "../../Components/HabitPage/SelectHabit";
+import SelectFrequency from "../../Components/HabitPage/SelectFrequency";
+import Notification from "../../Components/HabitPage/Notification";
+import TimeDatePicker from "../../Components/HabitPage/TimeDataPicker";
+import UpdateExcludeButtons from "../../Components/HabitPage/UpdateExcludeButtons";
+import DefaultButton from "../../Components/Common/DefaultButton";
+import HabitsService from "../../service/HabitsService";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -30,32 +28,25 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
 export default function HabitPage({ route }) {
-    const navigation = useNavigation();
-	  const [habitInput, setHabitInput] = useState();
-    const [frequencyInput, setFrequencyInput] = useState();
-    const [notificationToggle, setNotificationToggle] = useState();
-    const [dayNotification, setDayNotification] = useState();
-    const [timeNotification, setTimeNotification] = useState();
+  const navigation = useNavigation();
+  const [habitInput, setHabitInput] = useState();
+  const [frequencyInput, setFrequencyInput] = useState();
+  const [notificationToggle, setNotificationToggle] = useState();
+  const [dayNotification, setDayNotification] = useState();
+  const [timeNotification, setTimeNotification] = useState();
 
-	const { create, habit } = route.params;
+  const { create, habit } = route.params;
 
   const habitCreated = new Date();
-  const formatDate = `${habitCreated.getFullYear()}-${
-    habitCreated.getMonth() + 1
-  }-${habitCreated.getDate()}`;
+  const formatDate = `${habitCreated.getFullYear()}-${habitCreated.getMonth()}-${habitCreated.getDate()}`;
 
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
-
-		function handleCreateHabit() {
-    if (
-      habitInput === undefined ||
-      frequencyInput === undefined
-    ) {
+  function handleCreateHabit() {
+    if (habitInput === undefined || frequencyInput === undefined) {
       Alert.alert(
         "Você precisa selecionar um hábito e frequência para continuar"
       );
@@ -75,13 +66,12 @@ export default function HabitPage({ route }) {
         "Você precisa dizer a frequência e o horário da notificação!"
       );
     } else {
-
       if (notificationToggle) {
         NotificationService.createNotification(
-        habitInput,
-        frequencyInput,
-        dayNotification,
-        timeNotification
+          habitInput,
+          frequencyInput,
+          dayNotification,
+          timeNotification
         );
       }
 
@@ -132,47 +122,46 @@ export default function HabitPage({ route }) {
             timeNotification
           );
         }
+
         navigation.navigate("Home", {
           updatedHabit: `Updated in ${habit?.habitArea}`,
         });
       });
     }
   }
+  useEffect(() => {
+    if (habit?.habitHasNotification == 1) {
+      setNotificationToggle(true);
+      setDayNotification(habit?.habitNotificationFrequency);
+      setTimeNotification(habit?.habitNotificationTime);
+    }
+  }, []);
 
-  // ... Outros códigos
+  useEffect(() => {
+    if (notificationToggle === false) {
+      setTimeNotification(null);
+      setDayNotification(null);
+    }
+  }, [notificationToggle]);
 
-useEffect(() => {
-  if (habit?.habitHasNotification == 1) {
-    setNotificationToggle(true);
-    setDayNotification(habit?.habitNotificationFrequency);
-    setTimeNotification(habit?.habitNotificationTime);
-  }
-}, []);
+  useEffect(() => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-useEffect(() => {
-  if (notificationToggle === false) {
-    setTimeNotification(null);
-    setDayNotification(null);
-  }
-}, [notificationToggle]);
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
-// Notification Get Token
-useEffect(() => {
-  notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-    setNotification(notification);
-  });
-
-  responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-    console.log(response);
-  });
-
-  return () => {
-    Notifications.removeNotificationSubscription(notificationListener.current);
-    Notifications.removeNotificationSubscription(responseListener.current);
-  };
-}, []);
-
-// ... Outros códigos
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -238,8 +227,6 @@ useEffect(() => {
                 />
               </View>
             )}
-
-
           </View>
         </View>
       </ScrollView>
@@ -264,7 +251,8 @@ const styles = StyleSheet.create({
   mainContent: {
     width: 250,
     alignSelf: "center",
-  },configButton: {
+  },
+  configButton: {
     alignItems: "center",
   },
   title: {

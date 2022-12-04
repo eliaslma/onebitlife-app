@@ -1,36 +1,43 @@
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import React from "react";
 
 import Lottie from "lottie-react-native";
+import AnimationService from "../../../service/AnimationService";
 
-export default function LifeStatus() {
-  /* Status:
-    100- Máximo
-    50 - Médio
-    25 - Baixo
-    00 - Curto (Acabou o game)
-    No robô, consideramos primeiro Felicidade e depois Saúde xx-xx
-   */
+export default function LifeStatus({
+  mindHabit,
+  moneyHabit,
+  bodyHabit,
+  funHabit,
+}) {
+  /*Status:
+   100 - Máximo
+   50 - Médio
+   25 - baixo
+   00 - Curto (Acabou o game)
+   No robô, nós temos primeiros Felicidade e depoisa Saúde xx-xx
+*/
+  const [mind, setMind] = useState();
+  const [money, setMoney] = useState();
+  const [robot, setRobot] = useState();
+
+  useEffect(() => {
+    AnimationService.animationStatus(
+      mindHabit?.progressBar,
+      moneyHabit?.progressBar,
+      bodyHabit?.progressBar,
+      funHabit?.progressBar,
+      setMind,
+      setMoney,
+      setRobot
+    );
+  }, [mindHabit, moneyHabit, bodyHabit, funHabit]);
+
   return (
     <View style={styles.container}>
-      <Lottie
-        source={require("../../../assets/education/education-100.json")}
-        autoPlay
-        loop
-        style={styles.educationAnimation}
-      />
-      <Lottie
-        source={require("../../../assets/money/money-100.json")}
-        autoPlay
-        loop
-        style={styles.financesAnimation}
-      />
-      <Lottie
-        source={require("../../../assets/robot/robot-100-100.json")}
-        autoPlay
-        loop
-        style={styles.robotAnimation}
-      />
+      <Lottie source={mind} autoPlay loop style={styles.educacaoAnimacao} />
+      <Lottie source={money} autoPlay loop style={styles.financasAnimacao} />
+      <Lottie source={robot} autoPlay loop style={styles.roboAnimacao} />
     </View>
   );
 }
@@ -40,21 +47,21 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
   },
-  robotAnimation: {
+  roboAnimacao: {
     width: 190,
     marginTop: 30,
     marginLeft: 25,
   },
-  educationAnimation: {
+  educacaoAnimacao: {
     width: 100,
     marginTop: 50,
     marginLeft: 5,
     position: "absolute",
   },
-  financesAnimation: {
+  financasAnimacao: {
     width: 100,
-    position: "absolute",
     marginTop: 50,
     marginLeft: 95,
+    position: "absolute",
   },
 });
