@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import ChangeNavigationService from "../../service/ChangeNavigationService";
 
 import LifeStatus from "../../Components/Common/LifeStatus";
 import StatusBar from "../../Components/Home/StatusBar";
 import CreateHabit from "../../Components/Home/CreateHabit";
 import EditHabit from "../../Components/Home/EditHabit";
+import HabitsService from "../../service/HabitsService";
 
-export default function Home() {
+export default function Home({ route }) {
   const navigation = useNavigation();
 
   const [mindHabit, setMindHabit] = useState();
@@ -15,15 +17,61 @@ export default function Home() {
   const [bodyHabit, setBodyHabit] = useState();
   const [funHabit, setFunHabit] = useState();
 
+  const [robotDaysLife, setRobotDaysLife] = useState();
+  const today = new Date();
+
   function handleNavExplanation() {
     navigation.navigate("AppExplanation");
   }
+
+   
+  const excludeArea = route.params?.excludeArea;
+
+  useEffect(() => {
+    HabitsService.findByArea("Mente").then((mind) => {
+      setMindHabit(mind[0]);
+    });
+    HabitsService.findByArea("Financeiro").then((money) => {
+      setMoneyHabit(money[0]);
+    });
+    HabitsService.findByArea("Corpo").then((body) => {
+      setBodyHabit(body[0]);
+    });
+    HabitsService.findByArea("Humor").then((fun) => {
+      setFunHabit(fun[0]);
+    });
+
+    if (excludeArea) {
+      if (excludeArea == "Mente") {
+        setMindHabit(null);
+      }
+      if (excludeArea == "Financeiro") {
+        setMoneyHabit(null);
+      }
+      if (excludeArea == "Corpo") {
+        setBodyHabit(null);
+      }
+      if (excludeArea == "Humor") {
+        setFunHabit(null);
+      }
+    }
+
+    ChangeNavigationService.checkShowHome(1)
+      .then((showHome) => {
+        const formDate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+        const checkDays =
+          new Date(formDate) - new Date(showHome.appStartData) + 1;
+
+        setRobotDaysLife(checkDays.toString().padStart(2, "0"));
+      })
+      .catch((err) => console.log(err));
+  }, [route.params]);
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={{ alignItems: "center" }}>
-          <Text style={styles.dailyChecks}>❤️ 20 dias - ✔️ 80 checks</Text>
+          <Text style={styles.dailyChecks}>❤️ {robotDaysLife} {robotDaysLife === "01" ? "dia" : "dias"} - </Text>
           <LifeStatus/>
           <StatusBar/>
 
